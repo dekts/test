@@ -4,7 +4,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\MenuItem;
+use Exception;
 use Illuminate\Routing\Controller as BaseController;
+use Illuminate\Support\Facades\Log;
 
 class MenuController extends BaseController
 {
@@ -94,7 +96,14 @@ class MenuController extends BaseController
     ]
      */
 
-    public function getMenuItems() {
-        throw new \Exception('implement in coding task 3');
+    public function getMenuItems()
+    {
+        try {
+            $menu = MenuItem::whereNull('parent_id')->with('children')->get();
+
+            return response()->json($menu);
+        } catch (Exception $exception) {
+            Log::error($exception->getMessage());
+        }
     }
 }
